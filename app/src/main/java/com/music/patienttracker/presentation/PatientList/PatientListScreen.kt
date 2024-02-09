@@ -37,12 +37,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.music.patienttracker.R
 import com.music.patienttracker.model.Patient
+import com.music.patienttracker.presentation.PatientDetails.PatientDetailsNavArgs
 import com.music.patienttracker.presentation.components.DeleteDialog
 import com.music.patienttracker.presentation.components.PatientItem
+import com.music.patienttracker.presentation.destinations.PatientDetailsScreenRouteDestination
+import com.music.patienttracker.presentation.destinations.PatientListScreenRouteDestination
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+
+@Destination(start = true)
+@Composable
+fun  PatientListScreenRoute(
+    navigator: DestinationsNavigator
+){
+    PatientListScreen(
+        onPatientItemCardClick = { PatinetId->
+                                 PatinetId?.let {
+                                     val navArgs = PatientDetailsNavArgs(patientId = PatinetId)
+                                     navigator.navigate(PatientDetailsScreenRouteDestination(navArgs=navArgs))
+                                 }
+        },
+        onFloatingActionButtonClicked = {PatinetId->
+            PatinetId?.let {
+                val navArgs = PatientDetailsNavArgs(patientId = PatinetId)
+                navigator.navigate(PatientDetailsScreenRouteDestination(navArgs=navArgs))
+            }
+        }
+    )
+}
 
 @Composable
-fun PatientListScreen(){
+private fun PatientListScreen(
+    onPatientItemCardClick: (Int?) -> Unit,
+    onFloatingActionButtonClicked:(Int?)-> Unit
+){
 
     // state for accessing first item of lazy column
     val listState = rememberLazyListState()
@@ -216,14 +245,13 @@ fun PatientListScreen(){
     Scaffold(
         topBar = {
             TopAppBarWithIcon(
-                onBackButtonClick = {}
             )
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 text = { Text(text = "Add Patient") },
                 icon = { Icon(imageVector = Icons.Default.Add , contentDescription = "Add") },
-                onClick = { /*TODO*/ },
+                onClick = { onFloatingActionButtonClicked(-1) },
                 expanded = isFABExpanded
             )
         }
@@ -241,7 +269,7 @@ fun PatientListScreen(){
                 PatientItem(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     patient = patient,
-                    onItemClicked = {},
+                    onItemClicked = {onPatientItemCardClick(-1)},
                     isDeletePatient= {isDeleteDialogOpen = true}
                 )
             }
@@ -269,18 +297,10 @@ fun PatientListScreen(){
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun TopAppBarWithIcon(
-    onBackButtonClick:() -> Unit
+
 ) {
     CenterAlignedTopAppBar(
 
-        navigationIcon = {
-                   IconButton(onClick = onBackButtonClick) {
-                       Icon(
-                           imageVector = Icons.Default.ArrowBack,
-                           contentDescription = "Navigation Back"
-                       )
-                   }
-        },
         title = {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(

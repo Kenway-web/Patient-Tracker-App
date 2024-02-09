@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -40,11 +41,35 @@ import androidx.compose.ui.unit.dp
 import com.music.patienttracker.R
 import com.music.patienttracker.presentation.components.PatientDatePicker
 import com.music.patienttracker.util.changeMillisToDateString
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.Instant
+
+data class PatientDetailsNavArgs(
+    val patientId:Int?
+)
+
+
+@Composable
+@Destination(navArgsDelegate = PatientDetailsNavArgs::class)
+fun  PatientDetailsScreenRoute(
+    navigator: DestinationsNavigator
+){
+    PatientDetails(
+        onBackItemClicked = {
+            navigator.navigateUp()
+        }
+    )
+}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PatientDetails() {
+private fun PatientDetails(
+    onBackItemClicked:() ->Unit
+) {
+
 
     var isDatePickerDialogOpen by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
@@ -61,7 +86,9 @@ fun PatientDetails() {
     )
 
     Scaffold(
-        topBar = { TopAppBarWithIcon() }
+        topBar = { TopAppBarWithIcon(
+            onBackItemClicked = onBackItemClicked
+        ) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -168,8 +195,20 @@ fun PatientDetails() {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun TopAppBarWithIcon() {
-    CenterAlignedTopAppBar(title = {
+private fun TopAppBarWithIcon(
+    onBackItemClicked: () -> Unit
+) {
+
+    CenterAlignedTopAppBar(
+        navigationIcon = {
+            IconButton(onClick = onBackItemClicked) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Navigation Back"
+                )
+            }
+        },
+        title = {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = R.drawable.plus_sign),
@@ -190,7 +229,7 @@ private fun TopAppBarWithIcon() {
 @Composable
 fun PatientDetailsPreview() {
     // Call your composable function with sample data for preview
-    PatientDetails()
+    PatientDetails(onBackItemClicked = {})
 }
 
 @Composable
