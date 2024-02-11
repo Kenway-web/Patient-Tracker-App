@@ -11,7 +11,10 @@ import com.music.patienttracker.presentation.NavGraph
 import com.music.patienttracker.presentation.NavGraphs
 import com.music.patienttracker.presentation.theme.PatientTrackerTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

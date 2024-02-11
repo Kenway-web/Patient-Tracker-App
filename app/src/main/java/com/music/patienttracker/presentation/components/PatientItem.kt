@@ -18,16 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.music.patienttracker.model.Patient
+import com.music.patienttracker.domain.model.Patient
 
 @Composable
 fun PatientItem(
     modifier: Modifier = Modifier,
-    patient:Patient,
+    patient: Patient,
     onItemClicked:() -> Unit,
     isDeletePatient:() -> Unit,
 
-){
+    ){
     ElevatedCard(
        modifier = modifier.clickable { onItemClicked() },
     ) {

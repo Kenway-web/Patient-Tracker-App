@@ -35,9 +35,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.music.patienttracker.R
-import com.music.patienttracker.model.Patient
+import com.music.patienttracker.domain.model.Patient
 import com.music.patienttracker.presentation.PatientDetails.PatientDetailsNavArgs
+import com.music.patienttracker.presentation.PatientViewModel
 import com.music.patienttracker.presentation.components.DeleteDialog
 import com.music.patienttracker.presentation.components.PatientItem
 import com.music.patienttracker.presentation.destinations.PatientDetailsScreenRouteDestination
@@ -51,6 +53,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun  PatientListScreenRoute(
     navigator: DestinationsNavigator
 ){
+    val viewModel:PatientViewModel = hiltViewModel()
     PatientListScreen(
         onPatientItemCardClick = { PatinetId->
                                  PatinetId?.let {
